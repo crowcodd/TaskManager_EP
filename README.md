@@ -1,2 +1,2 @@
-# TaskManager_EP
-Разработка менеджера задач
+# tododo-py
+акулёнок я ToDo-DoDo
