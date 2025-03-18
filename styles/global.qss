@@ -1,0 +1,19 @@
+QPushButton {
+    border-radius: 16px;
+    padding: 10px 16px;
+    background-color: #E1E0E0;
+    font-size: 22px;
+    color: black;
+}
+
+QLabel, QLineEdit, QTextEdit, QComboBox, QDateTimeEdit {
+    font-size: 14pt;
+}
+
+QPushButton:hover {
+    background-color: #D1D0D0;
+}
+
+* {
+    font-family: "Mulish";
+}
