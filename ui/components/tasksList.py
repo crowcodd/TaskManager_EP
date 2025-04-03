@@ -7,13 +7,13 @@ from .taskItem import TaskCardV2
 from .taskCreateWindow import TaskCreateWindow
 from utils.storage import global_storage
 
+# Столбец списка задач
 class KanbanColumn(QWidget):
-    """ Класс для столбца Kanban """
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
 
-        # Хранилище данных
+        # Загружаем данные из хранилища
         global_storage.load_from_json()
 
         # Список задач
@@ -34,7 +34,7 @@ class KanbanColumn(QWidget):
         # Добавляем кнопку в wrapper
         self.buttons_wrapper.addWidget(add_button)
 
-        # Add double click handler for task list
+        # Double click: Редактирование задачи
         self.task_list.itemDoubleClicked.connect(self.on_task_double_clicked)
 
         layout.addWidget(self.task_list)
@@ -68,16 +68,15 @@ class KanbanColumn(QWidget):
             })
             global_storage.save_to_json()
 
-            # Обновить список задач
+            # Обновляем список задач
             self.load_from_storage()
 
     # Добавить задачу
     def add_task(self, title, description, status, time = "", date = ""):
-        """ Добавляет новую задачу """
         task_widget = TaskCardV2(title, description, status, time, date)
         list_item = QListWidgetItem(self.task_list)
 
-        list_item.setSizeHint(task_widget.sizeHint())  # Устанавливаем размер карточки
+        list_item.setSizeHint(task_widget.sizeHint())
         self.task_list.addItem(list_item)
         self.task_list.setItemWidget(list_item, task_widget)
 

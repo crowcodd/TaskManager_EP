@@ -3,11 +3,12 @@ from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPainter
 
+# Обёртка для рендеринга SVG-иконок
 class SvgIconWidget(QLabel):
     def __init__(self, svg_file, width, height, parent=None):
         super().__init__(parent)
         self.svg_file = svg_file
-        self.setFixedSize(width, height)  # Укажите нужные размеры
+        self.setFixedSize(width, height)
 
     def paintEvent(self, event):
         painter = QPainter(self)

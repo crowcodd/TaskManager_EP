@@ -5,7 +5,7 @@ class Storage:
         self.todos = []
         self.base_dir = ""
 
-        # Определяем путь к файлу в зависимости от того, запущен ли код как .exe
+        # Определяем путь к файлу в зависимости от того, запущен ли код как release-сборка
         if getattr(sys, 'frozen', False):
             # Если код запущен как .exe
             self.base_dir = sys._MEIPASS
@@ -33,7 +33,7 @@ class Storage:
     def export_to_tsk(self, filename):
         self.save_to_json(filename)
 
-    # Импорт из .TSK
+    # Импорт данных из .TSK
     def import_from_tsk(self, filename):
         self.load_from_json(filename)
 

@@ -5,6 +5,7 @@ from .badge import Badge
 from .svgIcon import SvgIconWidget
 from utils.storage import global_storage
 
+# Элемент задачи для списка
 class TaskCardV2(QWidget):
     def __init__(self, title, description, status, time = "", date = ""):
         super().__init__()

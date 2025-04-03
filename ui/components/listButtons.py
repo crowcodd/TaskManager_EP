@@ -4,6 +4,7 @@ from PySide6.QtCore import QSize
 
 from utils.storage import global_storage
 
+# Кнопки над списком задач
 class ListButtons(QWidget):
     def __init__(self):
         super().__init__()

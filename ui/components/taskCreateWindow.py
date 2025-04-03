@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
     QCheckBox, QWidget)
 from PySide6.QtCore import QDateTime
 
+# Диалоговое окно создания задачи
 class TaskCreateWindow(QDialog):
     def __init__(self, parent=None, task_data=None):
         super().__init__(parent)

@@ -1,3 +1,4 @@
+/* Стилизация кнопки */
 QPushButton {
     border-radius: 16px;
     padding: 10px 16px;
@@ -14,6 +15,7 @@ QPushButton:hover {
     background-color: #D1D0D0;
 }
 
+/* Шрифт */
 * {
     font-family: "Mulish";
 }

@@ -1,6 +1,7 @@
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QVBoxLayout, QLabel, QWidget
 
+# Заголовок (лого) приложения
 class AppTitle(QWidget):
     def __init__(self):
         super().__init__()
