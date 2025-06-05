@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QLabel
 from PySide6.QtCore import Qt
 
-
 # Цветной бейдж для отображения статусов задач
 class Badge(QLabel):
     # Инит компонента

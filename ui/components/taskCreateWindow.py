@@ -3,8 +3,8 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
     QCheckBox, QWidget)
 from PySide6.QtCore import QDateTime
 
-# Диалоговое окно создания задачи
 class TaskCreateWindow(QDialog):
+    # Инициализация компонента
     def __init__(self, parent=None, task_data=None):
         super().__init__(parent)
         self.task_data = task_data
@@ -12,30 +12,40 @@ class TaskCreateWindow(QDialog):
         self.setModal(True)
         self.create_ui()
         
-        # Если указаны данные для задачи - подгружаем в форму
         if self.task_data:
             self.fill_form_data()
 
-    # Создаём UI
+    # Создать диалоговое окно
     def create_ui(self):
         layout = QVBoxLayout()
         self.setLayout(layout)
 
         # Поле для ввода названия задачи
         title_layout = QHBoxLayout()
-        title_label = QLabel("Укажите заголовок")
+        title_label = QLabel("Назовите задачу")
         self.title_input = QLineEdit()
+        self.title_input.setMaxLength(100)
+        self.title_length_label = QLabel("0/100")
         title_layout.addWidget(title_label)
         title_layout.addWidget(self.title_input)
+        title_layout.addWidget(self.title_length_label)
         layout.addLayout(title_layout)
+
+        # Проверка на вводимые символы в поле Название
+        self.title_input.textChanged.connect(self.update_title_length)
 
         # Поле для ввода описания задачи
         desc_layout = QVBoxLayout()
-        desc_label = QLabel("Укажите описание")
+        desc_label = QLabel("Дополнительная информация о задаче")
         self.desc_input = QTextEdit()
+        self.desc_length_label = QLabel("0/500")
         desc_layout.addWidget(desc_label)
         desc_layout.addWidget(self.desc_input)
+        desc_layout.addWidget(self.desc_length_label)
         layout.addLayout(desc_layout)
+
+        # Проверка на вводимые символы в поле Описание
+        self.desc_input.textChanged.connect(self.update_desc_length)
 
         # Список возможных статусов
         status_layout = QHBoxLayout()
@@ -47,7 +57,7 @@ class TaskCreateWindow(QDialog):
         layout.addLayout(status_layout)
 
         # Чекбокс для включения/выключения даты
-        self.use_datetime_checkbox = QCheckBox("Указать дату и время")
+        self.use_datetime_checkbox = QCheckBox("Хочу указать дату и время")
         self.use_datetime_checkbox.setChecked(True)
         self.use_datetime_checkbox.stateChanged.connect(self.toggle_datetime)
         layout.addWidget(self.use_datetime_checkbox)
@@ -55,7 +65,7 @@ class TaskCreateWindow(QDialog):
         # Поле для даты и времени
         self.datetime_container = QWidget()
         datetime_layout = QHBoxLayout(self.datetime_container)
-        datetime_label = QLabel("Дата и время для выполнения")
+        datetime_label = QLabel("Крайний срок выполнения (дедлайн)")
         self.datetime_input = QDateTimeEdit()
         
         # Устанавливаем дату по умолчанию (текущая + 1 день)
@@ -69,7 +79,11 @@ class TaskCreateWindow(QDialog):
 
         # Кнопки
         layout_btns = QVBoxLayout()
-        self.save_btn = QPushButton("Сохранить")
+        save_btn_text = "Добавить задачу"
+        if self.task_data:
+            save_btn_text = "Сохранить изменения"
+        
+        self.save_btn = QPushButton(save_btn_text)
         layout_btns.addWidget(self.save_btn)
 
         # Добавляем новые кнопки только для режима редактирования
@@ -109,14 +123,38 @@ class TaskCreateWindow(QDialog):
         # Обработчик для кнопки сохранения
         self.save_btn.clicked.connect(self.validate_fields)
 
+    # Обновить количество введённых символов в поле Название
+    def update_title_length(self):
+        length = len(self.title_input.text())
+        self.title_length_label.setText(f"{length}/100")
+        self.title_length_label.setStyleSheet("color: red;" if length == 100 else "color: black;")
+
+    # Обновить количество введённых символов в поле Описание
+    def update_desc_length(self):
+        text = self.desc_input.toPlainText()
+        if len(text) > 500:
+            # Обрезаем текст и обновляем поле
+            self.desc_input.blockSignals(True)
+            self.desc_input.setPlainText(text[:500])
+            self.desc_input.blockSignals(False)
+            self.desc_length_label.setText("500/500")
+            self.desc_length_label.setStyleSheet("color: red;")
+        else:
+            self.desc_length_label.setText(f"{len(text)}/500")
+            self.desc_length_label.setStyleSheet("color: red;" if len(text) == 500 else "color: black;")
+
     # Показать/скрыть поле для даты и времени
     def toggle_datetime(self, state):
         self.datetime_container.setVisible(state)
         
     # Загрузить данные из задачи в форму
     def fill_form_data(self):
-        self.title_input.setText(self.task_data['title'])
-        self.desc_input.setText(self.task_data['description'])
+        # Обрезаем данные при загрузке, если необходимо
+        title = self.task_data['title'][:100]
+        self.title_input.setText(title)
+        
+        desc = self.task_data['description'][:500]
+        self.desc_input.setText(desc)
         
         # slug статуса -> Текст
         status_text = "Ожидает"
@@ -168,22 +206,15 @@ class TaskCreateWindow(QDialog):
 
     # Удалить задачу
     def delete_task(self):
-        self.done("DELETE")
+        self.done(-1)
 
     # Проверка полей
     def validate_fields(self):
-        # Проверяем заполненность полей
         errors = []
         
         # Проверка заголовка
         if not self.title_input.text().strip():
             errors.append("Название не может быть пустым")
-        elif len(self.title_input.text()) > 100:
-            errors.append("Название слишком длинное (максимум 100 символов)")
-            
-        # Проверка описания
-        if len(self.desc_input.toPlainText()) > 500:
-            errors.append("Описание слишком длинное (максимум 500 символов)")
             
         # Проверка даты только если включен чекбокс
         if self.use_datetime_checkbox.isChecked():

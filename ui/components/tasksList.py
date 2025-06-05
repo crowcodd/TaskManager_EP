@@ -19,6 +19,12 @@ class KanbanColumn(QWidget):
         # Список задач
         self.task_list = QListWidget()
 
+        # Задаём фоновый цвет для нажатой задачи
+        self.task_list.setStyleSheet("""
+            QListWidget::item:selected {
+                background: rgba(109,137,132,0.5);
+            }""")        
+
         # Кнопки
         self.buttons_wrapper = QHBoxLayout()
 
@@ -41,7 +47,7 @@ class KanbanColumn(QWidget):
         layout.addLayout(self.buttons_wrapper)
         self.setLayout(layout)
 
-    # Показать диалог создания задачи
+    # Показать диалог создания задачиAdd commentMore actions
     def show_create_task_dialog(self):
         dialog = TaskCreateWindow(self)
         if dialog.exec() == QDialog.Accepted:
@@ -53,9 +59,9 @@ class KanbanColumn(QWidget):
             match task_data['status']:
                 case "Ожидает":
                     status = "created"
-                case "В процессе":    
+                case "В процессе":
                     status = "created"
-                case "Завершён":    
+                case "Завершён":
                     status = "completed"
 
             # Сохраняем задачи
@@ -126,7 +132,7 @@ class KanbanColumn(QWidget):
                     'date': updated_data['date']
                 })
                 global_storage.save_to_json()
-            elif result == "DELETE":  # Проверяем на удаление
+            elif result == -1:  # Проверяем на удаление
                 global_storage.todos.pop(task_index)
                 global_storage.save_to_json()
                 

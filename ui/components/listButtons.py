@@ -40,13 +40,13 @@ class ListButtons(QWidget):
     # Диалог экспорта задач
     def export_tasks_dialog(self):
         options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getSaveFileName(self, "Экспорт задач", "save.tsk", "Файл .tsk (*.tsk)", options=options)
+        file_name, _ = QFileDialog.getSaveFileName(self, "Экспорт задач", "todo.ics", "Файл ICalendar (*.ics)", options=options)
         if file_name:
-            global_storage.export_to_tsk(file_name)
+            global_storage.export_to_ics(file_name)
 
     # Диалог импорта задач
     def import_tasks_dialog(self):
         options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, "Импорт задач", "", "Файл .tsk (*.tsk)", options=options)
+        file_name, _ = QFileDialog.getOpenFileName(self, "Импорт задач", "", "Файл ICalendar (*.ics)", options=options)
         if file_name:
-            global_storage.import_from_tsk(file_name)
+            global_storage.import_from_ics(file_name)

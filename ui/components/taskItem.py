@@ -98,4 +98,9 @@ class TaskCardV2(QWidget):
         if date or time:
             layout.addLayout(datetime_layout)
         layout.addLayout(badges_list)
+        self.setStyleSheet("""
+                           QVBoxLayout:focus {
+                           background: red;
+                           }
+                           """)
         self.setLayout(layout)
